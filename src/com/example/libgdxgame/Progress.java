@@ -1,13 +1,13 @@
 package com.example.libgdxgame;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class Progress implements ApplicationListener {
+public class Progress implements Screen {
 
 	private ProgressBar mProgressBar;
 	private Stage mStage;
@@ -16,7 +16,7 @@ public class Progress implements ApplicationListener {
 	private boolean mHasInit = false;
 
 	@Override
-	public void create() {
+	public void show() {
 
 		mProgressBar = new ProgressBar(0, 0);
 		mStage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -44,7 +44,7 @@ public class Progress implements ApplicationListener {
 	}
 
 	@Override
-	public void render() {
+	public void render(float arg0) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(1f, 1f, 1f, 0f);
 
@@ -89,6 +89,11 @@ public class Progress implements ApplicationListener {
 	@Override
 	public void resume() {
 
+	}
+
+	@Override
+	public void hide() {
+		
 	}
 
 }

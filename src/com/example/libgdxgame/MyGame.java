@@ -4,15 +4,28 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
-public class Game implements ApplicationListener {
+public class MyGame implements Screen {
 
 	private static final String TAG = "Game";
 	
@@ -24,9 +37,23 @@ public class Game implements ApplicationListener {
 	private ParticleEffectPool mParticlePool;
 	private ArrayList<ParticleEffect> mParticleList;
 	
+	private Texture tex1;
+	private Texture tex2;
+	private Texture tex3;
+	
+	private MainActivity mMainActivity;
+	// 需要一个舞台
+	private Stage mStage;
+	
+	private Button mButton;
+	
+	public MyGame(MainActivity mainActivity){
+		this.mMainActivity = mainActivity;
+	}
+	
 	/** 当程序第一次创建的时候此方法被调用 */
 	@Override
-	public void create() {
+	public void show() {
 		Log.i(TAG, "create");
 		
 		mSpriteBatch = new SpriteBatch();
@@ -36,6 +63,35 @@ public class Game implements ApplicationListener {
 		mParticle.load(Gdx.files.internal("particle.p"), Gdx.files.internal(""));
 		mParticlePool = new ParticleEffectPool(mParticle, 5, 10);
 		mParticleList = new ArrayList<ParticleEffect>();
+		
+		
+		tex1 = new Texture(Gdx.files.internal("button1_480.png"));
+		tex2 = new Texture(Gdx.files.internal("button2_480.png"));
+		tex3 = new Texture(Gdx.files.internal("button3_480.png"));
+		
+		NinePatch n1 = new NinePatch(tex1, 14, 14, 18, 18);
+		NinePatch n2 = new NinePatch(tex2, 14, 14, 18, 18);
+		NinePatch n3 = new NinePatch(tex3, 14, 14, 18, 18);
+		Drawable drawable1 = new NinePatchDrawable(n1);
+		Drawable drawable2 = new NinePatchDrawable(n2);
+		Drawable drawable3 = new NinePatchDrawable(n3);
+		ButtonStyle buttonStyle = new ButtonStyle(drawable1, drawable2, drawable3);
+		mButton = new Button(buttonStyle);
+		mButton.setName("Start");
+		
+		mButton.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				mMainActivity.mAppGame.setScreen(mMainActivity.mProgress);
+			}
+			
+		});
+		
+		mStage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),true);
+		mStage.addActor(mButton);
+		Gdx.input.setInputProcessor(mStage);
+		
 	}
 
 	@Override
@@ -49,11 +105,14 @@ public class Game implements ApplicationListener {
 	}
 
 	@Override
-	public void render() {
+	public void render(float arg0) {
 		Log.i(TAG, "render");
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
+		
+		mStage.act(Gdx.graphics.getDeltaTime());
+		mStage.draw();
 		
 		mSpriteBatch.begin();
 		
@@ -107,6 +166,14 @@ public class Game implements ApplicationListener {
 		}
 		
 		mParticlePool.clear();
+		
+		mStage.dispose();
+		mButton.clear();
+	}
+
+	@Override
+	public void hide() {
+		
 	}
 
 	
