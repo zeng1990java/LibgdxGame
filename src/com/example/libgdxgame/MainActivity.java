@@ -9,7 +9,7 @@ public class MainActivity extends AndroidApplication  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize(new Game(), false);
+		initialize(new Progress(), false);
 	}
 
 }
